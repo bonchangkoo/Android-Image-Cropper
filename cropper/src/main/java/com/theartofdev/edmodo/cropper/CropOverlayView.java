@@ -132,6 +132,10 @@ public class CropOverlayView extends View {
   private Integer mOriginalLayerType;
   // endregion
 
+  private Paint mHandlePaint;
+
+  private float mHandleSize;
+
   public CropOverlayView(Context context) {
     this(context, null);
   }
@@ -402,6 +406,8 @@ public class CropOverlayView extends View {
 
     setMultiTouchEnabled(options.multiTouchEnabled);
 
+    setHandleSize(options.handleSize);
+
     mTouchRadius = options.touchRadius;
 
     mInitialCropWindowPaddingRatio = options.initialCropWindowPaddingRatio;
@@ -416,6 +422,8 @@ public class CropOverlayView extends View {
     mGuidelinePaint = getNewPaintOrNull(options.guidelinesThickness, options.guidelinesColor);
 
     mBackgroundPaint = getNewPaint(options.backgroundColor);
+
+    mHandlePaint = getNewPaint(options.borderLineColor);
   }
 
   // region: Private methods
@@ -591,6 +599,8 @@ public class CropOverlayView extends View {
     drawBorders(canvas);
 
     drawCorners(canvas);
+
+    drawHandles(canvas);
   }
 
   /** Draw shadow background over the image not including the crop area. */
@@ -708,6 +718,19 @@ public class CropOverlayView extends View {
         // Draw circular crop window border
         canvas.drawOval(rect, mBorderPaint);
       }
+    }
+  }
+
+  private void drawHandles(Canvas canvas) {
+    if (mHandlePaint != null) {
+      float w = mBorderPaint.getStrokeWidth();
+      RectF rect = mCropWindowHandler.getRect();
+      rect.inset(w / 2, w / 2);
+
+      canvas.drawCircle(rect.left, rect.top, mHandleSize, mHandlePaint);
+      canvas.drawCircle(rect.right, rect.top, mHandleSize, mHandlePaint);
+      canvas.drawCircle(rect.left, rect.bottom, mHandleSize, mHandlePaint);
+      canvas.drawCircle(rect.right, rect.bottom, mHandleSize, mHandlePaint);
     }
   }
 
@@ -985,6 +1008,11 @@ public class CropOverlayView extends View {
       Log.e("AIC", "Exception in crop window changed", e);
     }
   }
+
+  private void setHandleSize(float handleSize) {
+    mHandleSize = handleSize;
+  }
+
   // endregion
 
   // region: Inner class: CropWindowChangeListener

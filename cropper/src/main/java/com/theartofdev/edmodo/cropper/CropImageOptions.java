@@ -222,6 +222,8 @@ public class CropImageOptions implements Parcelable {
   /** optional image resource to be used for crop menu crop icon instead of text */
   public int cropMenuCropButtonIcon;
 
+  public float handleSize;
+
   /** Init options with defaults. */
   public CropImageOptions() {
 
@@ -283,6 +285,8 @@ public class CropImageOptions implements Parcelable {
     cropMenuCropButtonTitle = null;
 
     cropMenuCropButtonIcon = 0;
+
+    handleSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, dm);
   }
 
   /** Create object from parcel. */
